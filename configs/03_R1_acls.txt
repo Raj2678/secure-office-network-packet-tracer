@@ -1,0 +1,30 @@
+! R1 - phase 4: access control lists (apply ONLY after phase 3 connectivity tests pass)
+! In the R1 CLI type:  enable   then   configure terminal   then paste everything below.
+!
+! STAFF: DHCP, reach servers, ping/SSH to management. Everything else denied and logged.
+ip access-list extended STAFF_IN
+ remark Staff policy
+ permit udp any eq 68 any eq 67
+ permit icmp 192.168.10.0 0.0.0.255 host 192.168.10.1
+ permit ip 192.168.10.0 0.0.0.255 192.168.20.0 0.0.0.255
+ permit tcp 192.168.10.0 0.0.0.255 192.168.99.0 0.0.0.255 eq 22
+ permit icmp 192.168.10.0 0.0.0.255 192.168.99.0 0.0.0.255
+ deny ip any any log
+exit
+!
+! GUEST: DHCP, then only web (80) and DNS (53) to the server. Everything else denied and logged.
+ip access-list extended GUEST_IN
+ remark Guest policy
+ permit udp any eq 68 any eq 67
+ permit tcp 192.168.30.0 0.0.0.255 host 192.168.20.10 eq 80
+ permit udp 192.168.30.0 0.0.0.255 host 192.168.20.10 eq 53
+ deny ip any any log
+exit
+!
+interface gigabitEthernet0/0.10
+ ip access-group STAFF_IN in
+interface gigabitEthernet0/0.30
+ ip access-group GUEST_IN in
+exit
+end
+write memory

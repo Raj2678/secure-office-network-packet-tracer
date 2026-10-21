@@ -1,0 +1,15 @@
+! SW1 - Attack 1 defense: DHCP snooping
+! Run this BEFORE the rogue DHCP attack, so you can test attack vs no-defense
+! first, then re-run the attack with this defense on.
+! In the SW1 CLI type:  enable   then   configure terminal   then paste everything below.
+ip dhcp snooping
+ip dhcp snooping vlan 10,30
+!
+! The trunk to R1 is where the REAL DHCP server's replies come from - trust it.
+interface gigabitEthernet0/1
+ ip dhcp snooping trust
+!
+! All PC-facing ports are untrusted by default once snooping is on - that's
+! what blocks a rogue DHCP server plugged into any of them.
+end
+write memory

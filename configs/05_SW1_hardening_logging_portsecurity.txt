@@ -1,0 +1,31 @@
+! SW1 - phase 5: secure remote access, logging, and port security
+! BEFORE pasting: replace the passwords below with your own LAB-ONLY passwords.
+! In the SW1 CLI type:  enable   then   configure terminal   then paste everything below.
+service password-encryption
+enable secret ChangeMe-Lab-1
+username admin secret ChangeMe-Lab-2
+ip domain-name lab.local
+! If it asks "How many bits in the modulus", type 2048
+crypto key generate rsa general-keys modulus 2048
+ip ssh version 2
+!
+line vty 0 15
+ login local
+ transport input ssh
+ exec-timeout 5 0
+exit
+banner motd #Authorized access only. Activity is logged.#
+!
+service timestamps log datetime msec
+logging host 192.168.20.10
+logging trap informational
+!
+! Port security: each PC port accepts only the first device it sees
+interface range fastEthernet0/2 - 4
+ switchport port-security
+ switchport port-security maximum 1
+ switchport port-security mac-address sticky
+ switchport port-security violation restrict
+exit
+end
+write memory

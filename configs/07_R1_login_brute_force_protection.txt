@@ -1,0 +1,10 @@
+! R1 - Attack 2 defense: block repeated failed SSH logins, and log attempts
+! Run this AFTER you've demonstrated the brute-force attack once with no
+! defense, so you have a clean "before vs after" for your report.
+! In the R1 CLI type:  enable   then   configure terminal   then paste everything below.
+login block-for 120 attempts 3 within 60
+login on-failure log
+login on-success log
+!
+end
+write memory

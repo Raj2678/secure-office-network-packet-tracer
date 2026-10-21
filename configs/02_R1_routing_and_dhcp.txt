@@ -1,0 +1,41 @@
+! R1 - phase 2: router-on-a-stick (inter-VLAN routing) and DHCP
+! In the R1 CLI type:  enable   then   configure terminal   then paste everything below.
+hostname R1
+no ip domain-lookup
+!
+interface gigabitEthernet0/0
+ description TRUNK-TO-SW1
+ no shutdown
+!
+interface gigabitEthernet0/0.10
+ description STAFF
+ encapsulation dot1Q 10
+ ip address 192.168.10.1 255.255.255.0
+interface gigabitEthernet0/0.20
+ description SERVERS
+ encapsulation dot1Q 20
+ ip address 192.168.20.1 255.255.255.0
+interface gigabitEthernet0/0.30
+ description GUEST
+ encapsulation dot1Q 30
+ ip address 192.168.30.1 255.255.255.0
+interface gigabitEthernet0/0.99
+ description MGMT
+ encapsulation dot1Q 99
+ ip address 192.168.99.1 255.255.255.0
+exit
+!
+! DHCP for Staff and Guest (servers use a static address)
+ip dhcp excluded-address 192.168.10.1 192.168.10.99
+ip dhcp excluded-address 192.168.30.1 192.168.30.99
+ip dhcp pool STAFF
+ network 192.168.10.0 255.255.255.0
+ default-router 192.168.10.1
+ dns-server 192.168.20.10
+ip dhcp pool GUEST
+ network 192.168.30.0 255.255.255.0
+ default-router 192.168.30.1
+ dns-server 192.168.20.10
+exit
+end
+write memory
