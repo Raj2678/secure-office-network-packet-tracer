@@ -1,10 +1,6 @@
 # Secure Small-Office Network: Design, Hardening and Incident Investigation
 
 
-
-## 1. Objective
-what network you built and what security goals it meets
-
 ## 1. Objective
 
 I built a segmented office network in Cisco Packet Tracer to practise the
