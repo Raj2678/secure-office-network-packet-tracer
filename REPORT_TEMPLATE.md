@@ -89,10 +89,6 @@ administrator credentials.
 - `07-ssh-success-staff.png` — legitimate staff login succeeding for comparison
 - `09-telnet-refused.png` — unencrypted Telnet access refused entirely
 
-**Analysis:** [Write 2-3 sentences: why was the guest blocked at the network
-layer rather than just a wrong password? Why does disabling Telnet matter even
-if SSH is also password-protected?]
-
 **Verdict:** Blocked. The guest ACL prevented any management-plane access
 attempt, regardless of credentials.
 
